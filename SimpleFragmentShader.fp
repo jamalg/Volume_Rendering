@@ -6,6 +6,7 @@ in vec2 fragmentUV;
 // Values that stay constant
 uniform sampler2D myTextureSamplerVolume;
 uniform float rotationAngle;
+uniform float isoValue;
 
 // Ouput data
 out vec3 color;
@@ -86,7 +87,7 @@ void main()
         color +=  texture(myTextureSamplerVolume, pixCoord).rgb/256.;
     }
 */
-
+/*
  //Accumulate all vertical slices after rotation by rotationAngle around the z axis
     //float rotationAngle = 0.7;
     float x1,y1;
@@ -101,12 +102,26 @@ void main()
         pixCoord = pixel_coordinate(x1,y1,z);
         color +=  texture(myTextureSamplerVolume, pixCoord).rgb/256.;
     }
-
-
-/*
-     //Ray marching until density above a threshold (i.e., extract an iso-surface)
-     //...
 */
+
+
+     //Ray marching until density above a threshold (i.e., extract an iso-surface)
+     float x1,y1;
+     x = fragmentUV.x;
+     z = fragmentUV.y;
+     color = vec3(0.0,0.0,0.0);
+     for (int i=0; i<256; i++) {
+        y = float(i)/256.;
+        // l'axe de rotation central doit rester invariant donc on recentre  puis on revient en 0.5,0.5 après rotation
+        x1= (x-0.5)*cos(rotationAngle)+sin(rotationAngle)*(y-0.5)+0.5;
+        y1= -(x-0.5)*sin(rotationAngle)+cos(rotationAngle)*(y-0.5)+0.5;
+        pixCoord = pixel_coordinate(x1,y1,z);
+        if(texture(myTextureSamplerVolume, pixCoord).r > isoValue){
+        	  color=vec3(1.0,1.0,1.0);
+        	  break;
+          }
+    }
+
 
 
 /*
