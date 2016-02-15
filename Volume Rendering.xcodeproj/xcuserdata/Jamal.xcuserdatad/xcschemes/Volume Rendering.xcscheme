@@ -44,7 +44,7 @@
       allowLocationSimulation = "YES">
       <PathRunnable
          runnableDebuggingMode = "0"
-         FilePath = "/Users/Jamal/Documents/OMA/Image Synthesis/Projet Final/volume_topic/volumetric_rendering/volume_render">
+         FilePath = "/Users/Jamal/Documents/OMA/Image Synthesis/Projet Final/Volume_Rendering/volume_render">
       </PathRunnable>
       <MacroExpansion>
          <BuildableReference

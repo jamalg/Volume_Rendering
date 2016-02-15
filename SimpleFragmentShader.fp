@@ -5,6 +5,7 @@ in vec2 fragmentUV;
 
 // Values that stay constant
 uniform sampler2D myTextureSamplerVolume;
+uniform float rotationAngle;
 
 // Ouput data
 out vec3 color;
@@ -74,37 +75,33 @@ void main()
     
 */
  
-
+/*
       //Accumulate all vertical slices 
     x = fragmentUV.x;
     z = fragmentUV.y;
     color = vec3(0.0,0.0,0.0);
-    for (int i=0; i<100; i++) {
-        y = float((i+1)/100.); // extract the i th vertical slice
+    for (int i=0; i<256; i++) {
+        y = float((i+1)/256.); // extract the i th vertical slice
         pixCoord = pixel_coordinate(x,y,z);
-        color +=  texture(myTextureSamplerVolume, pixCoord).rgb/100.;
+        color +=  texture(myTextureSamplerVolume, pixCoord).rgb/256.;
     }
+*/
 
-/*
-      //Accumulate all vertical slices after rotation by rotationAngle around the z axis
-    float rotationAngle = 0;
-    float HypTot = 1.0/cos(rotationAngle);
+ //Accumulate all vertical slices after rotation by rotationAngle around the z axis
+    //float rotationAngle = 0.7;
+    float x1,y1;
     x = fragmentUV.x;
-    x = x - 0.5*tan(rotationAngle);
-    if (x<0) {
-        x=0;
-    }
-    y = 0.0;
     z = fragmentUV.y;
     color = vec3(0.0,0.0,0.0);
-    for (int i=0; i<100; i++) {
-        x = x + cos(math.PI/2.0 -rotationAngle)*float(i*HypTot/100);
-        y = y + sin(math.PI/2.0 -rotationAngle)*float(i*HypTot/100); // extract the i th vertical slice
-        pixCoord = pixel_coordinate(x,y,z);
-        color +=  texture(myTextureSamplerVolume, pixCoord).rgb/100.;
+    for (int i=0; i<256; i++) {
+            y = float(i)/256.;
+            // l'axe de rotation central doit rester invariant donc on recentre  puis on revient en 0.5,0.5 après rotation
+        x1= (x-0.5)*cos(rotationAngle)+sin(rotationAngle)*(y-0.5)+0.5;
+        y1= -(x-0.5)*sin(rotationAngle)+cos(rotationAngle)*(y-0.5)+0.5;
+        pixCoord = pixel_coordinate(x1,y1,z);
+        color +=  texture(myTextureSamplerVolume, pixCoord).rgb/256.;
     }
 
-*/
 
 /*
      //Ray marching until density above a threshold (i.e., extract an iso-surface)
