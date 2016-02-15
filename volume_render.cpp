@@ -60,6 +60,7 @@ int          g_MainWindow; // glut Window Id
 int          g_W=512;      // window width
 int          g_H=512;      // window width
 float        rotationAngle = 0.0;
+float        isoValue = 0.5;
 
 
 /* --------------------- Geometry ------------------- */
@@ -94,6 +95,12 @@ void mainKeyboard(unsigned char key, int x, int y)
     }
     else if (key == '-'){
         rotationAngle-= 0.1;
+    }
+    else if (key == 'u') {
+        isoValue+= 0.02;
+    }
+    else if (key == 'd'){
+        isoValue-= 0.02;
     }
 
 	printf("key '%c' pressed\n",key);
@@ -171,6 +178,9 @@ void mainRender()
 	// Send the user-controled variables
     GLuint RotationID = glGetUniformLocation(g_glslProgram, "rotationAngle");
     glUniform1f(RotationID, rotationAngle);
+    
+    GLuint IsovID = glGetUniformLocation(g_glslProgram, "isoValue");
+    glUniform1f(IsovID, isoValue);
 
 	
 	
