@@ -43,14 +43,14 @@ void main()
 { 
       vec2 pixCoord;
       float x,y,z;
-/*
+
       //extract one horizontal slice (x and y vary with fragment coordinates, z is fixed)
       x = fragmentUV.x;
       y = fragmentUV.y;
-      z = 82./100.; //extract 82nd slice
+      z = 22./100.; //extract 82nd slice
       pixCoord = pixel_coordinate(x,y,z);
       color = texture(myTextureSamplerVolume, pixCoord).rgb;
-*/
+
 
 /*
       //Accumulate all horizontal slices 
@@ -104,7 +104,7 @@ void main()
     }
 */
 
-
+/*
      //Ray marching until density above a threshold (i.e., extract an iso-surface)
      float x1,y1;
      x = fragmentUV.x;
@@ -122,7 +122,7 @@ void main()
           }
     }
 
-
+*/
 
 /*
      //Ray marching until density above a threshold, display iso-surface normals
