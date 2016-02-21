@@ -73,6 +73,7 @@ GLuint vertexbuffer;
 GLuint uvbuffer;
 // This will identify the textures (volume and normals)
 GLuint textureVolumeID;
+GLuint textureNormalsID;
 
 /*---------------------- Shaders -------------------*/
 GLuint g_glslProgram;
@@ -173,8 +174,14 @@ void mainRender()
 	glUniform1i(TexVolumeID, 0); 
 	
 	// Same for the normals, in texture unit 1
-	// ...
-	
+	// Get a handle for our "myTextureSamplerNormals" uniform
+	GLuint TexNormalsID = glGetUniformLocation(g_glslProgram, "myTextureSamplerNormals");
+	// Bind our texture in Texture Unit 1
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, textureNormalsID);
+	// Set our "myTextureSamplerNormals" sampler to user Texture Unit 1
+	glUniform1i(TexNormalsID, 1);
+
 	// Send the user-controled variables
     GLuint RotationID = glGetUniformLocation(g_glslProgram, "rotationAngle");
     glUniform1f(RotationID, rotationAngle);
@@ -362,13 +369,58 @@ void loadTexture()
     unsigned char * dataNormals = new unsigned char[width*height*3];
     
     //Compute normal from gradient for each voxel (x,y) of each slice z, store it as a color in dataNormals
-    // ...
-    
+
+	for (int x = 0; x < 256; x++) {
+		for (int y = 0; y < 256; y++) {
+			for (int z = 0; z < 100; z++) {
+
+				// Pixel coordinates in the texture for the finite difference
+				int u_x_fwd, v_x_fwd, u_y_fwd, v_y_fwd, u_z_fwd, v_z_fwd, u_x_bwd, v_x_bwd, u_y_bwd, v_y_bwd, u_z_bwd, v_z_bwd;
+				pixel_coordinate(x + 1, y, z, u_x_fwd, v_x_fwd) ;
+				pixel_coordinate(x - 1, y, z, u_x_bwd, v_x_bwd);
+
+				pixel_coordinate(x, y + 1, z, u_y_fwd, v_y_fwd);
+				pixel_coordinate(x, y - 1, z, u_y_bwd, v_y_bwd);
+
+				pixel_coordinate(x, y, z + 1, u_z_fwd, v_z_fwd);
+				pixel_coordinate(x, y, z - 1, u_z_bwd, v_z_bwd);
+
+				// Finite difference 
+				double G_x = (getTextureR(u_x_fwd, v_x_fwd, dataVolume, width, height) - getTextureR(u_x_fwd, v_x_fwd, dataVolume, width, height)) / 2.0;
+				double G_y = (getTextureR(u_y_fwd, v_y_fwd, dataVolume, width, height) - getTextureR(u_x_fwd, v_x_fwd, dataVolume, width, height)) / 2.0;
+				double G_z = (getTextureR(u_z_fwd, v_z_fwd, dataVolume, width, height) - getTextureR(u_x_fwd, v_x_fwd, dataVolume, width, height)) / 2.0;
+				
+				// Normalizing
+				double N_G = sqrt(G_x*G_x + G_y*G_y + G_z*G_z);
+
+				// Mapping between 0 and 255
+				unsigned char N_x = (unsigned char)((-G_x / N_G+ 1.0)*127.5);
+				unsigned char N_y = (unsigned char)((-G_y / N_G + 1.0)*127.5);
+				unsigned char N_z = (unsigned char)((-G_z / N_G + 1.0)*127.5);
+
+				// Assign values to dataNormals
+				int u, v;
+				pixel_coordinate(x, y, z, u, v);
+				setTextureB(u, v, dataNormals, width, height, N_x);
+				setTextureG(u, v, dataNormals, width, height, N_y);
+				setTextureR(u, v, dataNormals, width, height, N_z);
+
+			}
+		}
+	}
+
+
     // Create an OpenGL texture from dataNormals
-    // ...
+	glGenTextures(1, &textureNormalsID);
+	// "Bind" the newly created texture : all future texture functions will modify this texture
+	glBindTexture(GL_TEXTURE_2D, textureNormalsID);
+	// Give the image to OpenGL
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, dataNormals);
+	// Poor filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     
-    
-    delete[] dataVolume;
+    delete[] dataVolume; 
     delete[] dataNormals;
 }
 
