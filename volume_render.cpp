@@ -60,7 +60,7 @@ int          g_MainWindow; // glut Window Id
 int          g_W=512;      // window width
 int          g_H=512;      // window width
 float        rotationAngle = 0.0;
-float        isoValue = 0.5;
+float        isoValue = 0.85;
 
 
 /* --------------------- Geometry ------------------- */
@@ -337,7 +337,8 @@ void loadTexture()
 {
     //load the volumetric data from a bitmap file
     unsigned int width, height;
-    unsigned char * dataVolume = loadBMPRaw("images/cthead_assembled.bmp", width, height);
+	unsigned char * dataVolume = loadBMPRaw("images/sphere.bmp", width, height);
+	//unsigned char * dataVolume = loadBMPRaw("images/cthead_assembled.bmp", width, height);
     
     // Create one OpenGL texture for the volumetric data V
     glGenTextures(1, &textureVolumeID);
@@ -386,24 +387,24 @@ void loadTexture()
 				pixel_coordinate(x, y, z - 1, u_z_bwd, v_z_bwd);
 
 				// Finite difference 
-				double G_x = (getTextureR(u_x_fwd, v_x_fwd, dataVolume, width, height) - getTextureR(u_x_fwd, v_x_fwd, dataVolume, width, height)) / 2.0;
-				double G_y = (getTextureR(u_y_fwd, v_y_fwd, dataVolume, width, height) - getTextureR(u_x_fwd, v_x_fwd, dataVolume, width, height)) / 2.0;
-				double G_z = (getTextureR(u_z_fwd, v_z_fwd, dataVolume, width, height) - getTextureR(u_x_fwd, v_x_fwd, dataVolume, width, height)) / 2.0;
+				double G_x = (getTextureR(u_x_fwd, v_x_fwd, dataVolume, width, height) - getTextureR(u_x_bwd, v_x_bwd, dataVolume, width, height)) / 2.0;
+				double G_y = (getTextureG(u_y_fwd, v_y_fwd, dataVolume, width, height) - getTextureG(u_x_bwd, v_x_bwd, dataVolume, width, height)) / 2.0;
+				double G_z = (getTextureB(u_z_fwd, v_z_fwd, dataVolume, width, height) - getTextureB(u_x_bwd, v_x_bwd, dataVolume, width, height)) / 2.0;
 				
 				// Normalizing
 				double N_G = sqrt(G_x*G_x + G_y*G_y + G_z*G_z);
 
 				// Mapping between 0 and 255
-				unsigned char N_x = (unsigned char)((-G_x / N_G+ 1.0)*127.5);
-				unsigned char N_y = (unsigned char)((-G_y / N_G + 1.0)*127.5);
-				unsigned char N_z = (unsigned char)((-G_z / N_G + 1.0)*127.5);
+				unsigned char N_x = (unsigned char)((-G_x / N_G + 1.0) / 2 * 255.);
+				unsigned char N_y = (unsigned char)((-G_y / N_G + 1.0) / 2 * 255.);
+				unsigned char N_z = (unsigned char)((-G_z / N_G + 1.0) / 2 * 255.);
 
 				// Assign values to dataNormals
 				int u, v;
 				pixel_coordinate(x, y, z, u, v);
-				setTextureB(u, v, dataNormals, width, height, N_x);
+				setTextureR(u, v, dataNormals, width, height, N_x);
 				setTextureG(u, v, dataNormals, width, height, N_y);
-				setTextureR(u, v, dataNormals, width, height, N_z);
+				setTextureB(u, v, dataNormals, width, height, N_z);
 
 			}
 		}

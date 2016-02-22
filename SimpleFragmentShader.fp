@@ -50,7 +50,7 @@ void main()
       //extract one horizontal slice (x and y vary with fragment coordinates, z is fixed)
       x = fragmentUV.x;
       y = fragmentUV.y;
-      z = 13./100.; //extract 82nd slice
+      z = 82./100.; //extract 82nd slice
       pixCoord = pixel_coordinate(x,y,z);
       color = texture(myTextureSamplerVolume, pixCoord).rgb;
 */
@@ -73,14 +73,15 @@ void main()
     x = fragmentUV.x;
     z = fragmentUV.y;
     color = vec3(0.0,0.0,0.0);
-    y = 50./100.; // extract the middle vertical slice
+    y = 20./256.; // extract the middle vertical slice
     pixCoord = pixel_coordinate(x,y,z);
     color +=  texture(myTextureSamplerVolume, pixCoord).rgb;
-    
-*/
+  
+  */  
+
  
-/*
-      //Accumulate all vertical slices 
+ /*
+      //Accumulate all vertical slices (front view)
     x = fragmentUV.x;
     z = fragmentUV.y;
     color = vec3(0.0,0.0,0.0);
@@ -90,6 +91,7 @@ void main()
         color +=  texture(myTextureSamplerVolume, pixCoord).rgb/256.;
     }
 */
+
 /*
  //Accumulate all vertical slices after rotation by rotationAngle around the z axis
     //float rotationAngle = 0.7;
