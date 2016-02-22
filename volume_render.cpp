@@ -60,7 +60,7 @@ int          g_MainWindow; // glut Window Id
 int          g_W=512;      // window width
 int          g_H=512;      // window width
 float        rotationAngle = 0.0;
-float        isoValue = 0.85;
+float        isoValue = 0.45;
 
 
 /* --------------------- Geometry ------------------- */
@@ -337,8 +337,8 @@ void loadTexture()
 {
     //load the volumetric data from a bitmap file
     unsigned int width, height;
-	unsigned char * dataVolume = loadBMPRaw("images/sphere.bmp", width, height);
-	//unsigned char * dataVolume = loadBMPRaw("images/cthead_assembled.bmp", width, height);
+	//unsigned char * dataVolume = loadBMPRaw("images/sphere.bmp", width, height);
+	unsigned char * dataVolume = loadBMPRaw("images/cthead_assembled.bmp", width, height);
     
     // Create one OpenGL texture for the volumetric data V
     glGenTextures(1, &textureVolumeID);
@@ -388,8 +388,8 @@ void loadTexture()
 
 				// Finite difference 
 				double G_x = (getTextureR(u_x_fwd, v_x_fwd, dataVolume, width, height) - getTextureR(u_x_bwd, v_x_bwd, dataVolume, width, height)) / 2.0;
-				double G_y = (getTextureG(u_y_fwd, v_y_fwd, dataVolume, width, height) - getTextureG(u_x_bwd, v_x_bwd, dataVolume, width, height)) / 2.0;
-				double G_z = (getTextureB(u_z_fwd, v_z_fwd, dataVolume, width, height) - getTextureB(u_x_bwd, v_x_bwd, dataVolume, width, height)) / 2.0;
+				double G_y = (getTextureG(u_y_fwd, v_y_fwd, dataVolume, width, height) - getTextureG(u_y_bwd, v_y_bwd, dataVolume, width, height)) / 2.0;
+				double G_z = (getTextureB(u_z_fwd, v_z_fwd, dataVolume, width, height) - getTextureB(u_z_bwd, v_z_bwd, dataVolume, width, height)) / 2.0;
 				
 				// Normalizing
 				double N_G = sqrt(G_x*G_x + G_y*G_y + G_z*G_z);
