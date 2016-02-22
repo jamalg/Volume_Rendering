@@ -9,6 +9,8 @@ uniform sampler2D myTextureSamplerNormals; // For normals-reading
 
 uniform float rotationAngle;
 uniform float isoValue;
+uniform float specular_exponent; 
+
 
 // Ouput data
 out vec3 color;
@@ -129,7 +131,7 @@ void main()
 
 */
 
-
+/*
      //Ray marching until density above a threshold, display iso-surface normals
      float x1,y1;
      x = fragmentUV.x;
@@ -147,12 +149,44 @@ void main()
           }
     }
 	
-
   
-/* 
-    //Ray marching until density above a threshold, display shaded iso-surface
-    //...
 */
+
+    // Phong model
+
+   //Ray marching until density above a threshold, display shaded iso-surface
+    float x1,y1;
+    x = fragmentUV.x;
+    z = fragmentUV.y;
+    color = vec3(0.0,0.0,0.0);
+    for (int i=0; i<256; i++) {
+        y = float(i)/256.;
+        // l'axe de rotation central doit rester invariant donc on recentre  puis on revient en 0.5,0.5 après rotation
+        x1= (x-0.5)*cos(rotationAngle)+sin(rotationAngle)*(y-0.5)+0.5;
+        y1= -(x-0.5)*sin(rotationAngle)+cos(rotationAngle)*(y-0.5)+0.5;
+        pixCoord = pixel_coordinate(x1,y1,z);
+         
+        // Light direction and View direction - The light comes from the observer :
+        vec3 viewDirection = vec3 (-sin(rotationAngle), cos(rotationAngle), 0.);
+        vec3 L = normalize(viewDirection);
+        vec3 V = normalize(viewDirection);
+         
+        // Normal Vector - The light coordinates are in [-1,1] so we have to map the coordinates from the gradient  :
+        vec3 N = normalize(2.0*texture(myTextureSamplerNormals, pixCoord).rgb - 1.0);
+         
+        // Reflected view direction
+        vec3 R = reflect(L,N);
+         
+        // Specular exponent
+        int specular_exponent = 60;
+        
+        if((texture(myTextureSamplerVolume, pixCoord).r > isoValue)&&(x1 >= 0.)&&(y1 >= 0.)&&(x1 <= 1.)&&(y1 <= 1.)){
+            color = max(dot(-L,N),0.0)*vec3(0.5,0.5,0.5) + pow(max(dot(R,V),0.0),specular_exponent)*vec3(1,1,1);
+            break;
+        }
+      
+    }
+  
 
 
 }
