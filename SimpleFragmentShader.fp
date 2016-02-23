@@ -177,7 +177,7 @@ void main()
         vec3 N = normalize(2.0*texture(myTextureSamplerNormals, pixCoord).rgb - 1.0);
          
         // Reflected view direction
-        vec3 R = reflect(-L,N);
+        vec3 R = reflect(L,N);
          
         // Specular exponent
         int specular_exponent = 90;
