@@ -130,8 +130,8 @@ void main()
         	  break;
           }
     }
-
 */
+
 
 /*
      //Ray marching until density above a threshold, display iso-surface normals
@@ -169,7 +169,7 @@ void main()
         pixCoord = pixel_coordinate(x1,y1,z);
          
         // Light direction and View direction - The light comes from the observer :
-        vec3 viewDirection = vec3 (-sin(rotationAngle), cos(rotationAngle), 0.);
+        vec3 viewDirection = vec3 (sin(rotationAngle), cos(rotationAngle), 0.);
         vec3 L = normalize(viewDirection);
         vec3 V = normalize(viewDirection);
          
@@ -177,10 +177,10 @@ void main()
         vec3 N = normalize(2.0*texture(myTextureSamplerNormals, pixCoord).rgb - 1.0);
          
         // Reflected view direction
-        vec3 R = reflect(L,N);
+        vec3 R = reflect(-L,N);
          
         // Specular exponent
-        int specular_exponent = 60;
+        int specular_exponent = 90;
         
         if((texture(myTextureSamplerVolume, pixCoord).r > isoValue)&&(x1 >= 0.)&&(y1 >= 0.)&&(x1 <= 1.)&&(y1 <= 1.)){
             color = max(dot(-L,N),0.0)*vec3(0.5,0.5,0.5) + pow(max(dot(R,V),0.0),specular_exponent)*vec3(1,1,1);
@@ -188,7 +188,7 @@ void main()
         }
       
     }
-  
+
 
 
 }
