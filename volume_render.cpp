@@ -59,10 +59,21 @@ using namespace std;
 int          g_MainWindow; // glut Window Id
 int          g_W=512;      // window width
 int          g_H=512;      // window width
+
+/* --------------------- Volume Rendering Parameters ------------------- */
+
 float        rotationAngle = 0.0;
-float        isoValue = 0.2;
+float        isoValue = 0.4;  // Initial value but controlled by the y coordinate of the mouse
 
+/* --------------------- Phong Parameters ------------------- */
 
+int			specular_exponent = 900;
+float		d_col_r = 0.82;
+float		d_col_g = 0.70;
+float		d_col_b = 0.55;    // Tane Brown
+float		s_col_r = 1.0;
+float		s_col_g = 1.0;
+float		s_col_b = 1.0;
 /* --------------------- Geometry ------------------- */
 
 //Vertex Array Object
@@ -131,6 +142,7 @@ void mainMouse(int btn, int state, int x, int y)
 void mainMotion(int x,int y)
 {
 	printf("Mouse is at %d,%d\n",x,y);
+	isoValue = float(y) / g_H;           // The iso value is controlled by the y coordinate of the mouse
 }
 
 /* -------------------------------------------------------- */
@@ -189,8 +201,15 @@ void mainRender()
     GLuint IsovID = glGetUniformLocation(g_glslProgram, "isoValue");
     glUniform1f(IsovID, isoValue);
 
-	
-	
+	GLuint SpecID = glGetUniformLocation(g_glslProgram, "specular_exponent");
+	glUniform1i(SpecID, specular_exponent);
+
+	GLuint DColID = glGetUniformLocation(g_glslProgram, "d_col");
+	glUniform3f(DColID, d_col_r, d_col_g, d_col_b);
+
+	GLuint SColID = glGetUniformLocation(g_glslProgram, "s_col");
+	glUniform3f(SColID, s_col_r, s_col_g, s_col_b);
+
 	//--- Geometry ---//
 	// 1rst attribute buffer : vertices
 	glEnableVertexAttribArray(0);

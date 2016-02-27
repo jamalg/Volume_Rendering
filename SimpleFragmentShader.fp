@@ -9,7 +9,9 @@ uniform sampler2D myTextureSamplerNormals; // For normals-reading
 
 uniform float rotationAngle;
 uniform float isoValue;
-uniform float specular_exponent; 
+uniform int specular_exponent;
+uniform vec3 d_col;
+uniform vec3 s_col;
 
 
 // Ouput data
@@ -52,7 +54,7 @@ void main()
       //extract one horizontal slice (x and y vary with fragment coordinates, z is fixed)
       x = fragmentUV.x;
       y = fragmentUV.y;
-      z = 82./100.; //extract 82nd slice
+      z = 81./100.; //extract 82nd slice (j = 8, i = 1)
       pixCoord = pixel_coordinate(x,y,z);
       color = texture(myTextureSamplerVolume, pixCoord).rgb;
 */
@@ -63,32 +65,29 @@ void main()
     y = fragmentUV.y;
     color = vec3(0.0,0.0,0.0);
     for (int i=0; i<100; i++) {
-        z = float((i+1)/100.); // extract the i th slice
+        z = float((i)/100.); // extract the (i+1) th horizontal slice
         pixCoord = pixel_coordinate(x,y,z);
         color +=  texture(myTextureSamplerVolume, pixCoord).rgb/100.;
     }
 */
-
-    
+  
 /*
       //extract one vertical slice (x and z vary with fragment coordinates, y is fixed)
     x = fragmentUV.x;
     z = fragmentUV.y;
     color = vec3(0.0,0.0,0.0);
-    y = 20./256.; // extract the middle vertical slice
+    y = 127./256.; // extract the middle vertical slice
     pixCoord = pixel_coordinate(x,y,z);
     color +=  texture(myTextureSamplerVolume, pixCoord).rgb;
-  
-  */  
+*/
 
- 
- /*
+/*
       //Accumulate all vertical slices (front view)
     x = fragmentUV.x;
     z = fragmentUV.y;
     color = vec3(0.0,0.0,0.0);
     for (int i=0; i<256; i++) {
-        y = float((i+1)/256.); // extract the i th vertical slice
+        y = float((i)/256.); // extract the (i+1) th vertical slice
         pixCoord = pixel_coordinate(x,y,z);
         color +=  texture(myTextureSamplerVolume, pixCoord).rgb/256.;
     }
@@ -132,7 +131,6 @@ void main()
     }
 */
 
-
 /*
      //Ray marching until density above a threshold, display iso-surface normals
      float x1,y1;
@@ -149,10 +147,9 @@ void main()
         	  color= texture(myTextureSamplerNormals, pixCoord).rgb;  // Not a white color anymore
         	  break;
           }
-    }
-	
-  
+    }  
 */
+
 
     // Phong model
 
@@ -180,15 +177,13 @@ void main()
         vec3 R = reflect(L,N);
          
         // Specular exponent
-        int specular_exponent = 90;
         
         if((texture(myTextureSamplerVolume, pixCoord).r > isoValue)&&(x1 >= 0.)&&(y1 >= 0.)&&(x1 <= 1.)&&(y1 <= 1.)){
-            color = max(dot(-L,N),0.0)*vec3(0.5,0.5,0.5) + pow(max(dot(R,V),0.0),specular_exponent)*vec3(1,1,1);
+            color = max(dot(-L,N),0.0)*d_col + pow(max(dot(R,V),0.0),specular_exponent)*s_col;     // Tane brown color
             break;
         }
       
     }
-
 
 
 }
