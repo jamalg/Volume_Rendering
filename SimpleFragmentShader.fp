@@ -174,10 +174,9 @@ void main()
         vec3 N = normalize(2.0*texture(myTextureSamplerNormals, pixCoord).rgb - 1.0);
          
         // Reflected view direction
-        vec3 R = reflect(L,N);
+        vec3 R = reflect(-L,N);
          
         // Specular exponent
-        
         if((texture(myTextureSamplerVolume, pixCoord).r > isoValue)&&(x1 >= 0.)&&(y1 >= 0.)&&(x1 <= 1.)&&(y1 <= 1.)){
             color = max(dot(-L,N),0.0)*d_col + pow(max(dot(R,V),0.0),specular_exponent)*s_col;     // Tane brown color
             break;
