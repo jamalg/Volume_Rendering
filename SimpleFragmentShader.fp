@@ -102,7 +102,7 @@ void main()
     color = vec3(0.0,0.0,0.0);
     for (int i=0; i<256; i++) {
             y = float(i)/256.;
-            // l'axe de rotation central doit rester invariant donc on recentre  puis on revient en 0.5,0.5 après rotation
+            // Central axis has to stay rotation invariant so we translate it to (x,y)=(0,0), then we rotate and translate the axis back to (x,y)=(0.5,0.5)
         x1= (x-0.5)*cos(rotationAngle)+sin(rotationAngle)*(y-0.5)+0.5;
         y1= -(x-0.5)*sin(rotationAngle)+cos(rotationAngle)*(y-0.5)+0.5;
         pixCoord = pixel_coordinate(x1,y1,z);
@@ -120,7 +120,7 @@ void main()
      color = vec3(0.0,0.0,0.0);
      for (int i=0; i<256; i++) {
         y = float(i)/256.;
-        // l'axe de rotation central doit rester invariant donc on recentre  puis on revient en 0.5,0.5 après rotation
+        // Central axis has to stay rotation invariant so we translate it to (x,y)=(0,0), then we rotate and translate the axis back to (x,y)=(0.5,0.5)
         x1= (x-0.5)*cos(rotationAngle)+sin(rotationAngle)*(y-0.5)+0.5;
         y1= -(x-0.5)*sin(rotationAngle)+cos(rotationAngle)*(y-0.5)+0.5;
         pixCoord = pixel_coordinate(x1,y1,z);
@@ -139,7 +139,7 @@ void main()
      color = vec3(0.0,0.0,0.0);
      for (int i=0; i<256; i++) {
         y = float(i)/256.;
-        // l'axe de rotation central doit rester invariant donc on recentre  puis on revient en 0.5,0.5 après rotation
+        // Central axis has to stay rotation invariant so we translate it to (x,y)=(0,0), then we rotate and translate the axis back to (x,y)=(0.5,0.5)
         x1= (x-0.5)*cos(rotationAngle)+sin(rotationAngle)*(y-0.5)+0.5;
         y1= -(x-0.5)*sin(rotationAngle)+cos(rotationAngle)*(y-0.5)+0.5;
         pixCoord = pixel_coordinate(x1,y1,z);
@@ -160,7 +160,7 @@ void main()
     color = vec3(0.0,0.0,0.0);
     for (int i=0; i<256; i++) {
         y = float(i)/256.;
-        // l'axe de rotation central doit rester invariant donc on recentre  puis on revient en 0.5,0.5 après rotation
+        // Central axis has to stay rotation invariant so we translate it to (x,y)=(0,0), then we rotate and translate the axis back to (x,y)=(0.5,0.5)
         x1= (x-0.5)*cos(rotationAngle)+sin(rotationAngle)*(y-0.5)+0.5;
         y1= -(x-0.5)*sin(rotationAngle)+cos(rotationAngle)*(y-0.5)+0.5;
         pixCoord = pixel_coordinate(x1,y1,z);
