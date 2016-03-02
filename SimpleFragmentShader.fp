@@ -106,7 +106,7 @@ void main()
         x1= (x-0.5)*cos(rotationAngle)+sin(rotationAngle)*(y-0.5)+0.5;
         y1= -(x-0.5)*sin(rotationAngle)+cos(rotationAngle)*(y-0.5)+0.5;
         pixCoord = pixel_coordinate(x1,y1,z);
-        if ((texture(myTextureSamplerVolume, pixCoord).r > isoValue)&&(x1 >= 0.)&&(y1 >= 0.)&&(x1 <= 1.)&&(y1 <= 1.)) {
+        if ((x1 >= 0.)&&(y1 >= 0.)&&(x1 <= 1.)&&(y1 <= 1.)) {
           color +=  texture(myTextureSamplerVolume, pixCoord).rgb/256.;  
         }
     }
