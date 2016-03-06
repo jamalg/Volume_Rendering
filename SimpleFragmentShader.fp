@@ -106,7 +106,7 @@ void main()
         x1= (x-0.5)*cos(rotationAngle)+sin(rotationAngle)*(y-0.5)+0.5;
         y1= -(x-0.5)*sin(rotationAngle)+cos(rotationAngle)*(y-0.5)+0.5;
         pixCoord = pixel_coordinate(x1,y1,z);
-        if ((x1 >= 0.)&&(y1 >= 0.)&&(x1 <= 1.)&&(y1 <= 1.)) {
+        if ((x1 >= 0.)&&(y1 >= 0.)&&(x1 <= 1.)&&(y1 <= 1.)) {            // Clamping x and y coordinates to [0;1]
           color +=  texture(myTextureSamplerVolume, pixCoord).rgb/256.;  
         }
     }
@@ -124,7 +124,8 @@ void main()
         x1= (x-0.5)*cos(rotationAngle)+sin(rotationAngle)*(y-0.5)+0.5;
         y1= -(x-0.5)*sin(rotationAngle)+cos(rotationAngle)*(y-0.5)+0.5;
         pixCoord = pixel_coordinate(x1,y1,z);
-        if((texture(myTextureSamplerVolume, pixCoord).r > isoValue)&&(x1 >= 0.)&&(y1 >= 0.)&&(x1 <= 1.)&&(y1 <= 1.)){
+        if((texture(myTextureSamplerVolume, pixCoord).r > isoValue)&&    // Iso-surface Condition
+           (x1 >= 0.)&&(y1 >= 0.)&&(x1 <= 1.)&&(y1 <= 1.)) {             // Clamping x and y coordinates to [0;1]
         	  color=vec3(1.0,1.0,1.0);
         	  break;
           }
@@ -143,7 +144,8 @@ void main()
         x1= (x-0.5)*cos(rotationAngle)+sin(rotationAngle)*(y-0.5)+0.5;
         y1= -(x-0.5)*sin(rotationAngle)+cos(rotationAngle)*(y-0.5)+0.5;
         pixCoord = pixel_coordinate(x1,y1,z);
-        if((texture(myTextureSamplerVolume, pixCoord).r > isoValue)&&(x1 >= 0.)&&(y1 >= 0.)&&(x1 <= 1.)&&(y1 <= 1.)){
+        if((texture(myTextureSamplerVolume, pixCoord).r > isoValue)&&    // Iso-surface Condition
+           (x1 >= 0.)&&(y1 >= 0.)&&(x1 <= 1.)&&(y1 <= 1.)) {             // Clamping x and y coordinates to [0;1]
         	  color= texture(myTextureSamplerNormals, pixCoord).rgb;  // Not a white color anymore
         	  break;
           }
@@ -177,7 +179,8 @@ void main()
         vec3 R = reflect(-L,N);
          
         // Specular exponent
-        if((texture(myTextureSamplerVolume, pixCoord).r > isoValue)&&(x1 >= 0.)&&(y1 >= 0.)&&(x1 <= 1.)&&(y1 <= 1.)){
+        if((texture(myTextureSamplerVolume, pixCoord).r > isoValue)&&    // Iso-surface Condition
+           (x1 >= 0.)&&(y1 >= 0.)&&(x1 <= 1.)&&(y1 <= 1.)) {             // Clamping x and y coordinates to [0;1]
             color = max(dot(-L,N),0.0)*d_col + pow(max(dot(R,V),0.0),specular_exponent)*s_col;     // Tane brown color
             break;
         }

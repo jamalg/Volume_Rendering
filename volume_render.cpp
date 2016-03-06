@@ -389,7 +389,6 @@ void loadTexture()
     unsigned char * dataNormals = new unsigned char[width*height*3];
     
     //Compute normal from gradient for each voxel (x,y) of each slice z, store it as a color in dataNormals
-
 	for (int x = 0; x < 256; x++) {
 		for (int y = 0; y < 256; y++) {
 			for (int z = 0; z < 100; z++) {
